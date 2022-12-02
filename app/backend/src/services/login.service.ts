@@ -16,4 +16,13 @@ export default class LoginService {
     }
     return { status: statusHTTP.UNAUTHORIZED, message: 'Incorrect email or password' };
   };
+
+  public validate = async (token: string) => {
+    try {
+      const data = this.jwt.validateToken(token);
+      return { status: statusHTTP.OK, message: data.user.role };
+    } catch (e) {
+      return { status: statusHTTP.UNAUTHORIZED, message: 'Token unauthorized' };
+    }
+  };
 }

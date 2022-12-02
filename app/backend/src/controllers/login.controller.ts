@@ -10,4 +10,14 @@ export default class LoginControler {
     if (status === statusHTTP.OK) return res.status(status).json({ token: message });
     return res.status(status).json({ message });
   };
+
+  public validate = async (req: Request, res: Response) => {
+    const token = req.headers.authorization;
+    if (token) {
+      const { status, message } = await this.loginService.validate(token);
+      if (status === statusHTTP.OK) return res.status(status).json({ role: message });
+      return res.status(status).json({ message });
+    }
+    return res.status(statusHTTP.BAD_REQUEST).json({ message: 'Token not found' });
+  };
 }
