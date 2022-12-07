@@ -15,4 +15,18 @@ export default class MatchesController {
       if (status && message) return res.status(status).json(message);
     }
   };
+
+  public addNewMatch = async (req: Request, res: Response) => {
+    const token = req.headers.authorization;
+    const { body } = req;
+    const { status, message } = await this.matchesService.addNewMatch(body, token as string);
+    return res.status(status).json(message);
+  };
+
+  public finishMatch = async (req: Request, res: Response) => {
+    const token = req.headers.authorization;
+    const { id } = req.params;
+    const { status, message } = await this.matchesService.finishMatch(Number(id), token as string);
+    return res.status(status).json({ message });
+  };
 }
