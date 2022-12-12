@@ -3,28 +3,39 @@ import TeamModel from '../database/models/Team.model';
 import statusHTTP from '../utils/statusHTTP';
 import Jwt from '../utils/jwt.utils';
 import INewMatch from '../interfaces/INewMatch';
+import IGoals from '../interfaces/IGoals';
 
 const INCLUDE = [
   { model: TeamModel, as: 'teamHome', attributes: ['teamName'] },
   { model: TeamModel, as: 'teamAway', attributes: ['teamName'] },
 ];
 
+const invalidToken = 'Token must be a valid token';
+
 export default class MatchesService {
   private jwt = new Jwt();
   public getAllMatches = async () => {
-    const allMatches = await MatchModel.findAll({ include: INCLUDE });
-    return { status: statusHTTP.OK, message: allMatches };
+    try {
+      const allMatches = await MatchModel.findAll({ include: INCLUDE });
+      return { status: statusHTTP.OK, message: allMatches };
+    } catch (e) {
+      return { status: statusHTTP.UNAUTHORIZED, message: invalidToken };
+    }
   };
 
   public getAllMatchesByProgress = async (inProgress: string) => {
-    if (inProgress === 'true') {
-      const matchesInProgress = await MatchModel
-        .findAll({ include: INCLUDE, where: { inProgress: 1 } });
-      return { status: statusHTTP.OK, message: matchesInProgress };
+    try {
+      if (inProgress === 'true') {
+        const matchesInProgress = await MatchModel
+          .findAll({ include: INCLUDE, where: { inProgress: 1 } });
+        return { status: statusHTTP.OK, message: matchesInProgress };
+      }
+      const matchesNotInProgress = await MatchModel
+        .findAll({ include: INCLUDE, where: { inProgress: 0 } });
+      return { status: statusHTTP.OK, message: matchesNotInProgress };
+    } catch (e) {
+      return { status: statusHTTP.UNAUTHORIZED, message: invalidToken };
     }
-    const matchesNotInProgress = await MatchModel
-      .findAll({ include: INCLUDE, where: { inProgress: 0 } });
-    return { status: statusHTTP.OK, message: matchesNotInProgress };
   };
 
   public addNewMatch = async (newMatch: INewMatch, token: string) => {
@@ -43,7 +54,7 @@ export default class MatchesService {
       const data = await MatchModel.create(newMatchInProgress);
       return { status: statusHTTP.CREATED, message: data };
     } catch (e) {
-      return { status: statusHTTP.UNAUTHORIZED, message: 'Token unauthorized' };
+      return { status: statusHTTP.UNAUTHORIZED, message: invalidToken };
     }
   };
 
@@ -53,7 +64,18 @@ export default class MatchesService {
       await MatchModel.update({ inProgress: 0 }, { where: { id } });
       return { status: statusHTTP.OK, message: 'Finished' };
     } catch (e) {
-      return { status: statusHTTP.UNAUTHORIZED, message: 'Token unauthorized' };
+      return { status: statusHTTP.UNAUTHORIZED, message: invalidToken };
+    }
+  };
+
+  public updateMatch = async (id: number, goals: IGoals) => {
+    try {
+      const { homeTeamGoals, awayTeamGoals } = goals;
+      await MatchModel.update({ homeTeamGoals, awayTeamGoals }, { where: { id } });
+      const updatedMatch = await MatchModel.findOne({ where: { id } });
+      return { status: statusHTTP.OK, message: updatedMatch };
+    } catch (e) {
+      return { status: statusHTTP.UNAUTHORIZED, message: invalidToken };
     }
   };
 }
