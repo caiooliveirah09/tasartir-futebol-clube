@@ -34,6 +34,11 @@ export default class MatchesService {
         return { status: statusHTTP.UNPROCESSABLE_ENTITY,
           message: 'It is not possible to create a match with two equal teams' };
       }
+      const awayTeam = await TeamModel.findOne({ where: { id: newMatch.awayTeam } });
+      const homeTeam = await TeamModel.findOne({ where: { id: newMatch.homeTeam } });
+      if (!awayTeam || !homeTeam) {
+        return { status: statusHTTP.NOT_FOUND, message: 'There is no team with such id!' };
+      }
       const newMatchInProgress = { ...newMatch, inProgress: true };
       const data = await MatchModel.create(newMatchInProgress);
       return { status: statusHTTP.CREATED, message: data };

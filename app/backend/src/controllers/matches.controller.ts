@@ -21,8 +21,8 @@ export default class MatchesController {
     const token = req.headers.authorization;
     const { body } = req;
     const { status, message } = await this.matchesService.addNewMatch(body, token as string);
-    if (status === statusHTTP.UNPROCESSABLE_ENTITY) return res.status(status).json({ message });
-    return res.status(status).json(message);
+    if (status === statusHTTP.CREATED) return res.status(status).json(message);
+    return res.status(status).json({ message });
   };
 
   public finishMatch = async (req: Request, res: Response) => {
