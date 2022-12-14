@@ -52,7 +52,7 @@ const sortLeaderboard = (leaderboard: ILeaderboard[]) => leaderboard
 
 const leaderboardHome = (home: ITeam[], quantityOfTeams: number) => {
   const b = [] as ILeaderboard[];
-  for (let i = 1; i < quantityOfTeams as unknown as number; i += 1) {
+  for (let i = 1; i <= quantityOfTeams as unknown as number; i += 1) {
     const filtered = home
       .filter((team) => team.homeTeam === i && team.inProgress === false);
     b.push({

@@ -14,30 +14,20 @@ const invalidToken = 'Token must be a valid token';
 
 export default class MatchesService {
   private jwt = new Jwt();
-  public getAllMatches = async (token: string) => {
-    this.jwt.validateToken(token);
-    try {
-      const allMatches = await MatchModel.findAll({ include: INCLUDE });
-      return { status: statusHTTP.OK, message: allMatches };
-    } catch (e) {
-      return { status: statusHTTP.UNAUTHORIZED, message: invalidToken };
-    }
+  public getAllMatches = async () => {
+    const allMatches = await MatchModel.findAll({ include: INCLUDE });
+    return { status: statusHTTP.OK, message: allMatches };
   };
 
-  public getAllMatchesByProgress = async (inProgress: string, token: string) => {
-    try {
-      this.jwt.validateToken(token);
-      if (inProgress === 'true') {
-        const matchesInProgress = await MatchModel
-          .findAll({ include: INCLUDE, where: { inProgress: 1 } });
-        return { status: statusHTTP.OK, message: matchesInProgress };
-      }
-      const matchesNotInProgress = await MatchModel
-        .findAll({ include: INCLUDE, where: { inProgress: 0 } });
-      return { status: statusHTTP.OK, message: matchesNotInProgress };
-    } catch (e) {
-      return { status: statusHTTP.UNAUTHORIZED, message: invalidToken };
+  public getAllMatchesByProgress = async (inProgress: string) => {
+    if (inProgress === 'true') {
+      const matchesInProgress = await MatchModel
+        .findAll({ include: INCLUDE, where: { inProgress: 1 } });
+      return { status: statusHTTP.OK, message: matchesInProgress };
     }
+    const matchesNotInProgress = await MatchModel
+      .findAll({ include: INCLUDE, where: { inProgress: 0 } });
+    return { status: statusHTTP.OK, message: matchesNotInProgress };
   };
 
   public addNewMatch = async (newMatch: INewMatch, token: string) => {
@@ -60,25 +50,15 @@ export default class MatchesService {
     }
   };
 
-  public finishMatch = async (id: number, token: string) => {
-    try {
-      this.jwt.validateToken(token);
-      await MatchModel.update({ inProgress: 0 }, { where: { id } });
-      return { status: statusHTTP.OK, message: 'Finished' };
-    } catch (e) {
-      return { status: statusHTTP.UNAUTHORIZED, message: invalidToken };
-    }
+  public finishMatch = async (id: number) => {
+    await MatchModel.update({ inProgress: 0 }, { where: { id } });
+    return { status: statusHTTP.OK, message: 'Finished' };
   };
 
-  public updateMatch = async (id: number, goals: IGoals, token: string) => {
-    try {
-      this.jwt.validateToken(token);
-      const { homeTeamGoals, awayTeamGoals } = goals;
-      await MatchModel.update({ homeTeamGoals, awayTeamGoals }, { where: { id } });
-      const updatedMatch = await MatchModel.findOne({ where: { id } });
-      return { status: statusHTTP.OK, message: updatedMatch };
-    } catch (e) {
-      return { status: statusHTTP.UNAUTHORIZED, message: invalidToken };
-    }
+  public updateMatch = async (id: number, goals: IGoals) => {
+    const { homeTeamGoals, awayTeamGoals } = goals;
+    await MatchModel.update({ homeTeamGoals, awayTeamGoals }, { where: { id } });
+    const updatedMatch = await MatchModel.findOne({ where: { id } });
+    return { status: statusHTTP.OK, message: updatedMatch };
   };
 }
