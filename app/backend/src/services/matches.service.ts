@@ -14,7 +14,8 @@ const invalidToken = 'Token must be a valid token';
 
 export default class MatchesService {
   private jwt = new Jwt();
-  public getAllMatches = async () => {
+  public getAllMatches = async (token: string) => {
+    this.jwt.validateToken(token);
     try {
       const allMatches = await MatchModel.findAll({ include: INCLUDE });
       return { status: statusHTTP.OK, message: allMatches };
@@ -23,8 +24,9 @@ export default class MatchesService {
     }
   };
 
-  public getAllMatchesByProgress = async (inProgress: string) => {
+  public getAllMatchesByProgress = async (inProgress: string, token: string) => {
     try {
+      this.jwt.validateToken(token);
       if (inProgress === 'true') {
         const matchesInProgress = await MatchModel
           .findAll({ include: INCLUDE, where: { inProgress: 1 } });
@@ -68,8 +70,9 @@ export default class MatchesService {
     }
   };
 
-  public updateMatch = async (id: number, goals: IGoals) => {
+  public updateMatch = async (id: number, goals: IGoals, token: string) => {
     try {
+      this.jwt.validateToken(token);
       const { homeTeamGoals, awayTeamGoals } = goals;
       await MatchModel.update({ homeTeamGoals, awayTeamGoals }, { where: { id } });
       const updatedMatch = await MatchModel.findOne({ where: { id } });

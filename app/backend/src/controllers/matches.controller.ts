@@ -6,14 +6,15 @@ export default class MatchesController {
   private matchesService = new MatchesService();
   public getAllMatches = async (req: Request, res: Response) => {
     const { inProgress } = req.query;
+    const token = req.headers.authorization;
     if (!inProgress) {
-      const { status, message } = await this.matchesService.getAllMatches();
+      const { status, message } = await this.matchesService.getAllMatches(token as string);
       if (status === statusHTTP.UNAUTHORIZED) return res.status(status).json({ message });
       return res.status(status).json(message);
     }
     if (inProgress) {
       const { status, message } = await this.matchesService
-        .getAllMatchesByProgress(inProgress as string);
+        .getAllMatchesByProgress(inProgress as string, token as string);
       if (status === statusHTTP.UNAUTHORIZED) return res.status(status).json({ message });
       if (status && message) return res.status(status).json(message);
     }
@@ -35,9 +36,11 @@ export default class MatchesController {
   };
 
   public updateMatch = async (req: Request, res: Response) => {
+    const token = req.headers.authorization;
     const { id } = req.params;
     const { body } = req;
-    const { status, message } = await this.matchesService.updateMatch(Number(id), body);
+    const { status, message } = await this
+      .matchesService.updateMatch(Number(id), body, token as string);
     if (status === statusHTTP.UNAUTHORIZED) return res.status(status).json({ message });
     return res.status(status).json(message);
   };
