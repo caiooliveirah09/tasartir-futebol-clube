@@ -24,7 +24,7 @@
 }
 
 .score-board-classification {
-  background: #023031;
+  background: #588fa7;
   border-radius: 8px;
   color: white;
   font-family: Verdana , Tahoma , sans-serif;
@@ -38,7 +38,7 @@
 }
 
 .score-board-team-name {
-  background: #036b52;
+  background: #588fa7;
   border-radius: 8px;
   color: white;
   font-family: Verdana , Tahoma , sans-serif;
@@ -90,7 +90,7 @@
 }
 
 .score-board-goals-favor, .score-board-goals-balance {
-  background: #e1e5eb;
+  background: #588fa7;
   border-radius: 8px;
   color: black;
   font-family: Verdana , Tahoma , sans-serif;

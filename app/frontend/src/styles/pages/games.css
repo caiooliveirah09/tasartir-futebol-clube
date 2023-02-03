@@ -43,8 +43,8 @@
 
 .games-handlers form button {
   align-self: flex-end;
-  background: #003be5;
-  border: 1px solid #003be5;
+  background: #bfbae8;
+  border: 1px solid #bfbae8;
   border-radius: 8px;
   color: white;
   cursor: pointer;
@@ -63,11 +63,11 @@
 }
 
 .games-handlers form button:hover {
-  background: #002799;
+  background: #bfbae8;
 }
 
 .add-new-game-button {
-  color: #29313d;
+  color: #bfbae8;
   font-family: Verdana , Tahoma , sans-serif;
   font-size: 16px;
   font-style: normal;
@@ -135,9 +135,9 @@
 }
 
 .games-table-tbody-home-team, .games-table-tbody-away-team {
-  border: 1px solid #036b52;
+  border: 1px solid #588fa7;
   border-radius: 8px;
-  color: #036b52;
+  color: #588fa7;
   font-family: Verdana , Tahoma , sans-serif;
   font-size: 14px;
   font-style: normal;

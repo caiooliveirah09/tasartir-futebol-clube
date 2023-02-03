@@ -4,7 +4,7 @@ import Header from '../components/Header';
 import LeaderboardBtn from '../components/LeaderboardBtn';
 import MatchesBtn from '../components/MatchesBtn';
 import { requestLogin, setToken, requestData } from '../services/requests';
-import { positiveLogo } from '../images';
+import { footballLogo } from '../images';
 import '../styles/pages/login.css';
 
 const Login = () => {
@@ -47,7 +47,7 @@ const Login = () => {
         SecondNavegationLink={ MatchesBtn }
       />
       <section className="user-login-area">
-        <img src={ positiveLogo } alt="Trybe Futebol Clube Negative Logo" />
+        <img src={ footballLogo } alt="Trybe Futebol Clube Negative Logo" />
         <form>
           <h1>Área do usuário</h1>
           <label htmlFor="email-input">
